@@ -24,3 +24,9 @@ section.hero {
   width: 100%;
   margin-bottom: 1rem;
 }
+a:hover i{
+  transform: rotate(0);
+}
+.post-detail .post-image:hover{
+ cursor: pointer;
+}
