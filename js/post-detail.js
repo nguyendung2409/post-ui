@@ -21,7 +21,7 @@ function renderPostDetail(post) {
     const defaultImageAddress = 'https://via.placeholder.com/1368x400?text=thumbnail';
     heroImage.style.backgroundImage = `url(${defaultImageAddress})`;
   });
-
+  // attach event
   const editLink = document.getElementById('goToEditPageLink');
   if (!editLink) return;
   editLink.href = `/add-edit-post.html?id=${post.id}`;
