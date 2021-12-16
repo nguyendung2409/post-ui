@@ -1,7 +1,0 @@
-deploy:
-  provider: 'https://nguyendung2409.github.io/post-ui/'
-  skip_cleanup: true
-  github_token: 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 
-  keep_history: true
-  on:
-    branch: master
