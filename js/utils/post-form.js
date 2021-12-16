@@ -74,20 +74,43 @@ async function validatePostForm(form, formValues) {
   if (!isValid) form.classList.add('was-validated');
   return isValid;
 }
+function showLoading(form) {
+  const button = form.querySelector('[name=submit]');
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Saving...';
+  }
+}
+function hideLoading(form) {
+  const button = form.querySelector('[name=submit]');
+  if (button) {
+    button.disabled = false;
+    button.textContent = 'Save';
+  }
+}
 export function initPostForm({ formId, defaultValues, onSubmit }) {
   const form = document.getElementById(formId);
   if (!form) return;
   setFormValues(form, defaultValues);
+  let submitting = false;
   // get form values
   // validation
   // if valid trigger submit callback
   // otherwise , show message errror
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    // Prevent other submission
+    if (submitting) return;
+    showLoading(form);
+    submitting = true;
+
     const formValues = getFormValues(form);
     formValues.id = defaultValues.id;
     const isValid = await validatePostForm(form, formValues);
     if (!isValid) return;
-    onSubmit?.(formValues);
+    await onSubmit?.(formValues);
+
+    hideLoading(form);
+    submitting = false;
   });
 }
