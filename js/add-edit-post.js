@@ -1,4 +1,4 @@
-import postApi from './api/postApi';
+import postApi from './api/postApi.js';
 import { initPostForm, toast } from './utils';
 async function handleSubmitForm(formValues) {
   try {
