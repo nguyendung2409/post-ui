@@ -1,6 +1,7 @@
 import { setBackgroundImage, setFieldValue } from './common';
 import * as yup from 'yup';
 import { setTextContent } from './common';
+import { randomNumber } from './common';
 
 function setFormValues(form, formValues) {
   setFieldValue(form, "[name='title']", formValues?.title);
@@ -39,6 +40,10 @@ function getPostSchema() {
         (value) => value.split(' ').filter((x) => !!x && x.length >= 3).length >= 2
       ),
     description: yup.string(),
+    imageUrl: yup
+      .string()
+      .required('Please random a backgroundImage')
+      .url('Please enter a valid url'),
   });
 }
 function setFieldError(form, name, error) {
@@ -51,7 +56,7 @@ function setFieldError(form, name, error) {
 async function validatePostForm(form, formValues) {
   try {
     // reset previous errors
-    ['title', 'author'].forEach((name) => setFieldError(form, name, ''));
+    ['title', 'author', 'imageUrl'].forEach((name) => setFieldError(form, name, ''));
     const schema = getPostSchema();
     await schema.validate(formValues, { abortEarly: false });
   } catch (error) {
@@ -88,10 +93,24 @@ function hideLoading(form) {
     button.textContent = 'Save';
   }
 }
+function ramdomImage(form) {
+  const ramdomButton = document.getElementById('postChangeImage');
+  if (!ramdomButton) return;
+  ramdomButton.addEventListener('click', () => {
+    // build imageUrl
+    const imageUrl = `https://picsum.photos/id/${randomNumber(1000)}/1368/400`;
+    // set imageUrl for input + backgroundImage
+
+    setFieldValue(form, "[name='imageUrl']", imageUrl);
+
+    setBackgroundImage(document, '#postHeroImage', imageUrl);
+  });
+}
 export function initPostForm({ formId, defaultValues, onSubmit }) {
   const form = document.getElementById(formId);
   if (!form) return;
   setFormValues(form, defaultValues);
+  ramdomImage(form);
   let submitting = false;
   // get form values
   // validation
@@ -107,9 +126,8 @@ export function initPostForm({ formId, defaultValues, onSubmit }) {
     const formValues = getFormValues(form);
     formValues.id = defaultValues.id;
     const isValid = await validatePostForm(form, formValues);
-    if (!isValid) return;
-    await onSubmit?.(formValues);
-
+    if (isValid) await onSubmit?.(formValues);
+    // always hide loading no matter form is valid or not
     hideLoading(form);
     submitting = false;
   });
