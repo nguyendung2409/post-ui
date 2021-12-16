@@ -6,7 +6,10 @@ section.hero {
   background-position: center;
   background-repeat: no-repeat;
 }
-
+.post-detail{
+  width: fit-content;
+  margin: auto;
+}
 .post-detail .post-detail-main {
   margin-top: -4rem;
   padding: 2rem;
