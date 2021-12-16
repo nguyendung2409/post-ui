@@ -11,5 +11,4 @@ module.exports = defineConfig({
       },
     },
   },
-  base: '/post-ui/',
 });
