@@ -74,6 +74,32 @@ function setFieldError(form, name, error) {
     setTextContent(element.parentElement, '.invalid-feedback', error);
   }
 }
+async function validateFormField(form, formValues, name) {
+  try {
+    // reset previous errors
+    setFieldError(form, name, '');
+    const schema = getPostSchema();
+    await schema.validateAt(name, formValues);
+  } catch (error) {
+    // set errors
+    setFieldError(form, name, error.message);
+  }
+  // add class was-validated
+  const field = form.querySelector(`[name=${name}]`);
+  if (field && !field.checkValidity()) {
+    field.parentElement.classList.add('was-validated');
+  }
+}
+function initValidateOnChange(form) {
+  ['title', 'author'].forEach((name) => {
+    const field = form.querySelector(`[name=${name}]`);
+    if (!field) return;
+    field.addEventListener('input', (event) => {
+      const newValue = event.target.value;
+      validateFormField(form, { [name]: newValue }, name);
+    });
+  });
+}
 async function validatePostForm(form, formValues) {
   try {
     // reset previous errors
@@ -150,6 +176,8 @@ function initUploadImage(form) {
       const imageUrl = URL.createObjectURL(file);
       setBackgroundImage(document, '#postHeroImage', imageUrl);
     }
+    // trigger validate of input
+    validateFormField(form, { imageSource: imageSource.UPLOAD, image: file }, 'image');
   });
 }
 export function initPostForm({ formId, defaultValues, onSubmit }) {
@@ -160,6 +188,7 @@ export function initPostForm({ formId, defaultValues, onSubmit }) {
   initRamdomImage(form);
   initRadioImageSource(form);
   initUploadImage(form);
+  initValidateOnChange(form);
   let submitting = false;
   // get form values
   // validation
