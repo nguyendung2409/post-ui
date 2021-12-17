@@ -106,11 +106,26 @@ function ramdomImage(form) {
     setBackgroundImage(document, '#postHeroImage', imageUrl);
   });
 }
+function renderImageSourceControl(form, selectedValue) {
+  const controlList = form.querySelectorAll("[data-id='imageSource']");
+  if (!controlList) return;
+  controlList.forEach((control) => {
+    control.hidden = control.dataset.imageSource !== selectedValue;
+  });
+}
+function initRadioImageSource(form) {
+  const radioList = form.querySelectorAll("[name='imageSource']");
+  if (!radioList) return;
+  radioList.forEach((radio) => {
+    radio.addEventListener('change', (event) => renderImageSourceControl(form, event.target.value));
+  });
+}
 export function initPostForm({ formId, defaultValues, onSubmit }) {
   const form = document.getElementById(formId);
   if (!form) return;
   setFormValues(form, defaultValues);
   ramdomImage(form);
+  initRadioImageSource(form);
   let submitting = false;
   // get form values
   // validation
