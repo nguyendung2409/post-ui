@@ -5,22 +5,30 @@ function removeUnusedFields(formValues) {
   // imageSource = picsum -> remove image
   // imageSource = upload -> remove imageUrl
   if (payload.imageSource === imageSource.PICSUM) delete payload.image;
-  if ((payload, imageSource === imageSource.UPLOAD)) delete payload.imageUrl;
+  if (payload.imageSource === imageSource.UPLOAD) delete payload.imageUrl;
   // remove imageSource
   delete payload.imageSource;
+  if (!payload.id) delete payload.id;
   return payload;
 }
+function jsonToFormData(jsonObject) {
+  const formData = new FormData();
+  for (const key in jsonObject) {
+    formData.set(key, jsonObject[key]);
+  }
+  return formData;
+}
 async function handleSubmitForm(formValues) {
-  const payload = removeUnusedFields(formValues);
-  console.log('submit form', payload);
-  return;
   try {
     // check add/edit mode
     // call API
+    const payload = removeUnusedFields(formValues);
+
+    const formData = jsonToFormData(payload);
 
     const savedPost = formValues.id
-      ? await postApi.update(formValues)
-      : await postApi.add(formValues);
+      ? await postApi.updateFormData(formData)
+      : await postApi.addFormData(formData);
     // show success message
     toast.success('Save post successfully');
     // redirect to post-detail page
