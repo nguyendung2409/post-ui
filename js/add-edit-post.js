@@ -1,6 +1,19 @@
 import postApi from './api/postApi.js';
-import { initPostForm, toast } from './utils';
+import { imageSource, initPostForm, toast } from './utils';
+function removeUnusedFields(formValues) {
+  const payload = { ...formValues };
+  // imageSource = picsum -> remove image
+  // imageSource = upload -> remove imageUrl
+  if (payload.imageSource === imageSource.PICSUM) delete payload.image;
+  if ((payload, imageSource === imageSource.UPLOAD)) delete payload.imageUrl;
+  // remove imageSource
+  delete payload.imageSource;
+  return payload;
+}
 async function handleSubmitForm(formValues) {
+  const payload = removeUnusedFields(formValues);
+  console.log('submit form', payload);
+  return;
   try {
     // check add/edit mode
     // call API

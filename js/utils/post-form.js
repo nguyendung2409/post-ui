@@ -2,7 +2,10 @@ import { setBackgroundImage, setFieldValue } from './common';
 import * as yup from 'yup';
 import { setTextContent } from './common';
 import { randomNumber } from './common';
-
+export const imageSource = {
+  PICSUM: 'picsum',
+  UPLOAD: 'upload',
+};
 function setFormValues(form, formValues) {
   setFieldValue(form, "[name='title']", formValues?.title);
   setFieldValue(form, "[name='author']", formValues?.author);
@@ -40,10 +43,28 @@ function getPostSchema() {
         (value) => value.split(' ').filter((x) => !!x && x.length >= 3).length >= 2
       ),
     description: yup.string(),
-    imageUrl: yup
+    imageSource: yup
       .string()
-      .required('Please random a backgroundImage')
-      .url('Please enter a valid url'),
+      .required('Please select an image source')
+      .oneOf([imageSource.PICSUM, imageSource.UPLOAD]),
+    imageUrl: yup.string().when('imageSource', {
+      is: imageSource.PICSUM,
+      then: yup
+        .string()
+        .required('Please random a backgroundImage')
+        .url('Please enter a valid url'),
+    }),
+    image: yup.mixed().when('imageSource', {
+      is: imageSource.UPLOAD,
+      then: yup
+        .mixed()
+        .test('required', 'Please select an image to upload', (file) => file?.name)
+        .test('Max size 3MB', 'The image is too large (max-size =3MB)', (file) => {
+          const fileSize = file?.size || 0;
+          const MAX_SIZE = 3 * 1024 * 1024; // 3MB
+          return fileSize < MAX_SIZE;
+        }),
+    }),
   });
 }
 function setFieldError(form, name, error) {
@@ -56,7 +77,7 @@ function setFieldError(form, name, error) {
 async function validatePostForm(form, formValues) {
   try {
     // reset previous errors
-    ['title', 'author', 'imageUrl'].forEach((name) => setFieldError(form, name, ''));
+    ['title', 'author', 'imageUrl', 'image'].forEach((name) => setFieldError(form, name, ''));
     const schema = getPostSchema();
     await schema.validate(formValues, { abortEarly: false });
   } catch (error) {
@@ -93,7 +114,7 @@ function hideLoading(form) {
     button.textContent = 'Save';
   }
 }
-function ramdomImage(form) {
+function initRamdomImage(form) {
   const ramdomButton = document.getElementById('postChangeImage');
   if (!ramdomButton) return;
   ramdomButton.addEventListener('click', () => {
@@ -120,12 +141,25 @@ function initRadioImageSource(form) {
     radio.addEventListener('change', (event) => renderImageSourceControl(form, event.target.value));
   });
 }
+function initUploadImage(form) {
+  const uploadImage = form.querySelector("[name='image']");
+  if (!uploadImage) return;
+  uploadImage.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setBackgroundImage(document, '#postHeroImage', imageUrl);
+    }
+  });
+}
 export function initPostForm({ formId, defaultValues, onSubmit }) {
   const form = document.getElementById(formId);
   if (!form) return;
   setFormValues(form, defaultValues);
-  ramdomImage(form);
+  // init events
+  initRamdomImage(form);
   initRadioImageSource(form);
+  initUploadImage(form);
   let submitting = false;
   // get form values
   // validation
