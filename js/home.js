@@ -1,11 +1,13 @@
 import postApi from './api/postApi.js';
-import { initPagination, initSearch, renderPagination, renderPostList } from './utils';
+import { initPagination, initSearch, renderPagination, renderPostList, toast } from './utils';
+import Swal from 'sweetalert2';
 
 async function handleFilterChange(filterName, filterValue) {
   try {
     // update query params
     const url = new URL(window.location);
-    url.searchParams.set(filterName, filterValue);
+    if (filterName) url.searchParams.set(filterName, filterValue);
+
     // reset page if needed
     if (filterName === 'title_like') url.searchParams.set('_page', 1);
 
@@ -20,7 +22,45 @@ async function handleFilterChange(filterName, filterValue) {
     console.log('failed to fetch post list', error);
   }
 }
+function registerPostDeleteEvent() {
+  document.addEventListener('post-delete', async (event) => {
+    try {
+      const post = event.detail;
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger',
+        },
+        buttonsStyling: false,
+      });
 
+      swalWithBootstrapButtons
+        .fire({
+          title: `Do you want to delete post ${post.title} ?`,
+
+          showCancelButton: true,
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          reverseButtons: true,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            await postApi.remove(post.id);
+            await handleFilterChange();
+            toast.success('Delete successfully!!');
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
+          }
+        });
+    } catch (error) {
+      console.log('failed to delete post', error);
+      toast.error(error.message);
+    }
+  });
+}
 (async () => {
   // update queryParams if needed
   const url = new URL(window.location);
@@ -47,6 +87,7 @@ async function handleFilterChange(filterName, filterValue) {
     defaultParams: queryParams,
     onChange: (value) => handleFilterChange('title_like', value),
   });
+  registerPostDeleteEvent();
   try {
     const { data, pagination } = await postApi.getAll(queryParams);
     renderPostList('postList', data);
