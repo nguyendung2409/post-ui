@@ -22,7 +22,9 @@ async function handleFilterChange(filterName, filterValue) {
     console.log('failed to fetch post list', error);
   }
 }
+
 function registerPostDeleteEvent() {
+  // TODOS : handle case if delete : lastPage has only 1 item.
   document.addEventListener('post-delete', async (event) => {
     try {
       const post = event.detail;
@@ -47,12 +49,7 @@ function registerPostDeleteEvent() {
           if (result.isConfirmed) {
             await postApi.remove(post.id);
             await handleFilterChange();
-            toast.success('Delete successfully!!');
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
+            toast.success('Delete post successfully');
           }
         });
     } catch (error) {
@@ -61,6 +58,8 @@ function registerPostDeleteEvent() {
     }
   });
 }
+
+// Main
 (async () => {
   // update queryParams if needed
   const url = new URL(window.location);
@@ -74,6 +73,7 @@ function registerPostDeleteEvent() {
 
   window.history.pushState({}, '', url);
   const queryParams = url.searchParams;
+
   // attach event for prev/next link
   initPagination({
     elementId: 'pagination',
@@ -87,11 +87,13 @@ function registerPostDeleteEvent() {
     defaultParams: queryParams,
     onChange: (value) => handleFilterChange('title_like', value),
   });
+
   registerPostDeleteEvent();
   try {
-    const { data, pagination } = await postApi.getAll(queryParams);
-    renderPostList('postList', data);
-    renderPagination('pagination', pagination);
+    // const { data, pagination } = await postApi.getAll(queryParams);
+    // renderPostList('postList', data);
+    // renderPagination('pagination', pagination);
+    handleFilterChange();
   } catch (error) {
     console.log('get all failed', error);
   }

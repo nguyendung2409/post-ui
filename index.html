@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Posts UI</title>
 
-    <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
+    <!-- <link rel="shortcut icon" href="images/favicon.png" type="image/png" /> -->
 
     <!-- Bootstrap CSS -->
     <link
@@ -40,7 +40,7 @@
       <li class="col-12 col-md-6 col-lg-4">
         <div class="post-item mb-4">
           <div class="card">
-            <img data-id="thumbnail" src="images/recipe.jpg" class="card-img-top" alt="recipe" />
+            <img data-id="thumbnail" src="images/favicon.png" class="card-img-top" alt="recipe" />
 
             <div class="card-body">
               <h5 data-id="title" class="card-title">Card title</h5>
@@ -68,6 +68,7 @@
           </div>
         </div>
       </li>
+      <li class="page-item" data-id ="pageNumber"><a class="page-link" href="#"></a></li>
     </template>
 
     <header>
@@ -80,7 +81,7 @@
           <ul class="nav justify-content-between align-items-center">
             <li class="nav-item">
               <a class="nav___link" href=".">
-                <img class="nav__logo" src="images/logo.svg" alt="Logo Nordic Coder" />
+                <img class="nav__logo" src="images/arsenal-logo.png" alt="Arsenal logo" />
               </a>
             </li>
 
@@ -167,13 +168,13 @@
         <div class="container">
           <h1 class="with-underline text-center">Latest posts</h1>
           <!-- Search box -->
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="search">Search</span>
+          <div class="input-group mb-3" style="width: 280px;">
+            <!-- <span class="input-group-text" id="search">Search</span> -->
             <input
               id="searchInput"
               type="text"
               class="form-control"
-              placeholder="search by title"
+              placeholder="Search by title"
               aria-label="search"
               aria-describedby="search"
             />
@@ -186,16 +187,12 @@
             <ul id="pagination" class="pagination justify-content-center">
               <li class="page-item">
                 <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
+                  <i class="fas fa-chevron-left"></i>
                 </a>
               </li>
-
-              <!-- <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li> -->
               <li class="page-item">
                 <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
+                  <i class="fas fa-chevron-right"></i>
                 </a>
               </li>
             </ul>

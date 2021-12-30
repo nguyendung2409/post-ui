@@ -88,8 +88,8 @@
 /* Use primary color for page link */
 .posts-nav .page-item.active .page-link {
   color: white;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: var(--info-color);
+  border-color: var(--info-color);
 }
 
 .posts-nav .page-item .page-link {
@@ -100,4 +100,3 @@
 .posts-nav .page-item:not(.active) .page-link:hover {
   color: var(--primary-color);
 }
-

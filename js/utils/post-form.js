@@ -19,11 +19,7 @@ function setFormValues(form, formValues) {
 function getFormValues(form) {
   if (!form) return;
   const formValues = {};
-  // query each input and add to object
-  // ['title', 'author', 'description', 'imageUrl'].forEach((name) => {
-  //   const field = form.querySelector(`[name=${name}]`);
-  //   if (field) formValues[name] = field.value;
-  // });
+
   // use FormData
   const data = new FormData(form);
   for (const [key, value] of data) {
@@ -193,7 +189,7 @@ export function initPostForm({ formId, defaultValues, onSubmit }) {
   // get form values
   // validation
   // if valid trigger submit callback
-  // otherwise , show message errror
+  // otherwise , show message error
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     // Prevent other submission

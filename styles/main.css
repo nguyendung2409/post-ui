@@ -1,86 +1,87 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-    /* Make footer always at bottom of our screen */
-    display: flex;
-    flex-flow: column;
-    min-height: 100vh;
-    font-family: "Rubik", sans-serif;
+  /* Make footer always at bottom of our screen */
+  display: flex;
+  flex-flow: column;
+  min-height: 100vh;
+  font-family: 'Rubik', sans-serif;
 }
 
-body>main {
-    flex: 1 1 auto;
+body > main {
+  flex: 1 1 auto;
 }
 
 :root {
-    --primary-color: #dc1b1b;
+  --primary-color: #dc1b1b;
+  --info-color: rgb(2, 136, 209);
 }
-
 
 /* Override link style */
 
 a {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 a:hover {
-    color: var(--primary-color);
-    opacity: 0.8;
+  color: var(--primary-color);
+  opacity: 0.8;
 }
 
-a>i {
-    transition: all 0.25s;
+a > i.fa-plus-circle {
+  transition: all 0.25s;
 }
 
-a:hover>i {
-    transform: rotate(90deg);
+a:hover > i.fa-plus-circle {
+  transform: rotate(90deg);
 }
-
 
 /* Add underline for all h1 */
 
 h1.with-underline {
-    position: relative;
-    margin-bottom: 3rem;
+  position: relative;
+  margin-bottom: 3rem;
 }
 
 h1.with-underline::after {
-    content: "";
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 0;
-    right: 0;
-    width: 5rem;
-    height: 0.25rem;
-    margin: 0 auto;
-    border-radius: 0.25rem;
-    background-color: #444;
+  content: '';
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  width: 5rem;
+  height: 0.25rem;
+  margin: 0 auto;
+  border-radius: 0.25rem;
+  background-color: #444;
 }
-
 
 /* Reset ul style */
 
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
-
-::placeholder {
-    font-style: italic;
+input.form-control:focus {
+  outline: none;
+  box-shadow: none;
 }
-
+textarea.form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
 .nav .nav__logo {
-    height: 40px;
-    width: auto;
+  height: 50px;
+  width: auto;
 }
 
 .nav .nav___link {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-.nav .nav___link>i {
-    margin-right: 5px;
+.nav .nav___link > i.fa-plus-circle {
+  margin-right: 5px;
 }

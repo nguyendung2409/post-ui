@@ -1,5 +1,6 @@
 import postApi from './api/postApi.js';
 import { imageSource, initPostForm, toast } from './utils';
+
 function removeUnusedFields(formValues) {
   const payload = { ...formValues };
   // imageSource = picsum -> remove image
